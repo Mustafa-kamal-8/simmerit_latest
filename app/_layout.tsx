@@ -1,24 +1,51 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
+import { useEffect } from "react";
+import { Stack } from "expo-router";
+import { StatusBar } from "react-native";
 
-import { useColorScheme } from '@/hooks/use-color-scheme';
-
-export const unstable_settings = {
-  anchor: '(tabs)',
-};
+import "./globals.css";
+import { useStore } from "@/store";
+import Toast from "react-native-toast-message";
+import { toastConfig } from "@/lib/toast/config";
+import UpdateCard from "@/components/UpdateCard";
+import { ShareIntentProvider } from "expo-share-intent";
+import { checkOtaUpdate, checkUpdate, fetchOtaUpdate, fetchUpdate } from "@/lib/updates";
+import { checkUserSession } from "@/lib/actions/users";
+import { COLORS } from "@/constants";
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
+	const {
+		setState,
+		state: { otaAvailable, updateAvailable },
+	} = useStore();
 
-  return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
-  );
+	useEffect(() => {
+		setState("isLoading", true);
+
+		checkUserSession();
+		checkOtaUpdate();
+		checkUpdate();
+
+		const timer = setTimeout(() => {
+			setState("isLoading", false);
+		}, 3000);
+
+		return () => clearTimeout(timer);
+	}, []);
+
+	return (
+		<ShareIntentProvider
+			options={{
+				resetOnBackground: false,
+				scheme: "simmerit",
+			}}
+		>
+			<StatusBar barStyle="dark-content" backgroundColor={COLORS.background} />
+			<Stack screenOptions={{ headerShown: false }} />
+
+			<UpdateCard type="ota" onUpdate={fetchOtaUpdate} visible={otaAvailable} />
+			<UpdateCard type="update" onUpdate={fetchUpdate} visible={updateAvailable} />
+
+			<Toast config={toastConfig} />
+		</ShareIntentProvider>
+	);
 }
