@@ -133,7 +133,7 @@ const Login = () => {
 					{isLoading ? (
 						<ActivityIndicator size="small" className="text-neutral-dark" />
 					) : (
-						<GoogleIcon width={24} height={24} />
+						<Image source={GoogleIcon as any} style={{ width: 24, height: 24 }} />
 					)}
 
 					<Text className="text-base font-medium text-foreground ml-3">Continue with Google</Text>

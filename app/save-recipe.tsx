@@ -17,7 +17,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Clipboard from '@react-native-clipboard/clipboard';
+import * as Clipboard from "expo-clipboard";
 
 function SaveRecipe() {
   const {
@@ -326,7 +326,7 @@ const ManualSaveRecipe = ({
 
   const handlePasteFromClipboard = async () => {
     try {
-      const clipboardContent = await Clipboard.getString();
+      const clipboardContent = await Clipboard.getStringAsync();
       const content = clipboardContent.trim();
       if (!content) {
         toast.error("No content found in clipboard.");

@@ -17,7 +17,7 @@ import {
 } from "react-native";
 import { COLORS, TUTORIAL_VIDEO_URL } from "@/constants";
 import { router } from "expo-router";
-import * as Linkning from "expo-linking";
+import * as Linking from "expo-linking";
 
 const Recipes = () => {
   const {
@@ -162,7 +162,7 @@ const EmptyState = () => (
       <View className="w-full gap-y-3">
         <TouchableOpacity
           className="bg-primary py-4 px-8 rounded-2xl active:scale-95"
-          onPress={() => Linkning.openURL(TUTORIAL_VIDEO_URL)}
+          onPress={() => Linking.openURL(TUTORIAL_VIDEO_URL)}
         >
           <View className="flex-row items-center justify-center">
             <Ionicons name="play-circle" size={20} color={COLORS.neutral} />

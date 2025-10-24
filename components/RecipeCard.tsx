@@ -1,7 +1,7 @@
 import { COLORS } from "@/constants";
 import { toast } from "@/lib/toast";
 import { Feather, Ionicons } from "@expo/vector-icons";
-import Clipboard from "@react-native-clipboard/clipboard";
+import * as Clipboard from "expo-clipboard";
 import { format } from "date-fns";
 import * as Linking from "expo-linking";
 import { FC, useState } from "react";
@@ -35,7 +35,7 @@ const RecipeCard: FC<RecipeCardProps> = ({
     if (isCopied) return;
 
     try {
-      Clipboard.setString(url);
+      await Clipboard.setStringAsync(url);
       toast.success("URL copied to clipboard!", "Copied");
       setIsCopied(true);
 
